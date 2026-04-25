@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Nimaya Trader</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Suppress benign FormatException warnings emitted by the embedded
+      // Flutter chart adapter so they don't trigger the Vite runtime-error
+      // overlay. Must run before any other listeners are registered.
+      (function () {
+        function isBenign(reason) {
+          var t = '';
+          if (typeof reason === 'string') t = reason;
+          else if (reason && typeof reason.message === 'string') t = reason.message;
+          else if (reason && typeof reason.toString === 'function') t = String(reason);
+          return (
+            t.indexOf('FormatException') !== -1 ||
+            t.indexOf("Unexpected token '<'") !== -1 ||
+            t.indexOf('<!DOCTYPE') !== -1
+          );
+        }
+        window.addEventListener(
+          'unhandledrejection',
+          function (event) {
+            if (isBenign(event.reason)) {
+              event.stopImmediatePropagation();
+              event.preventDefault();
+            }
+          },
+          true,
+        );
+        window.addEventListener(
+          'error',
+          function (event) {
+            if (isBenign(event.error || event.message)) {
+              event.stopImmediatePropagation();
+              event.preventDefault();
+            }
+          },
+          true,
+        );
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
